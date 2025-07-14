@@ -1,0 +1,24 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+.idea/
+android/.gradle/
+*.iml
+
+# VS Code
+.vscode/
+
+# iOS
+ios/Pods
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# Firebase
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist

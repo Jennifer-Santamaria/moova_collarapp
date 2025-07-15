@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';         
-import 'package:device_info_plus/device_info_plus.dart';             
+//import 'package:device_info_plus/device_info_plus.dart';             
 
 // --------------- 2) STATEFUL WIDGET --------------- //
 class CollarHomePage extends StatefulWidget {
@@ -63,19 +63,40 @@ class _CollarHomePageState extends State<CollarHomePage> {
     await prefs.setString('longitude', longitude);
   }
 
-  Future<void> _initCowId() async {
+Future<void> _initCowId() async {
   final prefs = await SharedPreferences.getInstance();
-  final deviceInfo = DeviceInfoPlugin();
-  final androidInfo = await deviceInfo.androidInfo;
-  
-  setState(() {
-    cowId = prefs.getString('cowId') ?? 'COW_${androidInfo.model.replaceAll(' ', '_')}_${androidInfo.id}';
-  });
-  
-  if (prefs.getString('cowId') == null) {
+
+ 
+  cowId = prefs.getString('cowId');
+  if (cowId != null) return;
+
+  try {
+    final counterRef = FirebaseFirestore.instance.collection('metadata').doc('counter');
+
+    final newCowId = await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(counterRef);
+
+      int currentCount = 0;
+      if (snapshot.exists) {
+        currentCount = snapshot.get('count') ?? 0;
+      }
+
+      final nextCount = currentCount + 1;
+      final generatedId = 'COW${nextCount.toString().padLeft(4, '0')}';
+
+      transaction.set(counterRef, {'count': nextCount});
+      return generatedId;
+    });
+
+    cowId = newCowId;
+    await prefs.setString('cowId', cowId!);
+  } catch (e) {
+    // Si falla la generación en Firestore, generamos un ID temporal
+    cowId = 'COW_${DateTime.now().millisecondsSinceEpoch % 100000}';
     await prefs.setString('cowId', cowId!);
   }
 }
+
 
   void _startBackgroundUpdates() {
     _timer = Timer.periodic(

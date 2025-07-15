@@ -45,9 +45,7 @@ Aplicación Flutter para dispositivos móviles Android que simula un collar inte
 
 
 🧪 Estructura de Firestore
-plaintext
-Copiar
-Editar
+
 ubicaciones (colección)
 ├── COW0001 (documento)
 │   ├── nombre: "Cindirella"

@@ -17,6 +17,7 @@ dependencies:
   firebase_storage: ^12.4.9
   geolocator: ^14.0.2
   intl: ^0.20.2
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +30,8 @@ flutter:
   assets:
     - assets/images/cow_logo.jpg
   uses-material-design: true
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "app_icon.png"
